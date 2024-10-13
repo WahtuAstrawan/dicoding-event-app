@@ -6,24 +6,25 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
-    @GET("events?active={status}")
+    @GET("events")
     fun getEvents(
-        @Path("status") status: Int
+        @Query("active") status: String
     ): Call<EventsResponse>
 
-    @GET("events?active={status}&limit={limit}")
+    @GET("events")
     fun getEventsWithLimit(
-        @Path("status") status: Int,
-        @Path("limit") limit: Int
+        @Query("active") status: String,
+        @Query("limit") limit: String
     ): Call<EventsResponse>
 
     @GET("events/{id}")
     fun getEventDetail(
-        @Path("id") id: Int
+        @Path("id") id: String
     ): Call<EventResponse>
 
-    @GET("events?active=-1&q={keyword}")
+    @GET("events")
     fun searchEvents(
-        @Path("keyword") keyword: String
+        @Query("active") status: String,
+        @Query("q") keyword: String
     ): Call<EventsResponse>
 }

@@ -11,8 +11,8 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_navigation_home_to_detailFragment"
-            app:destination="@id/detailFragment" />
+            android:id="@+id/action_navigation_home_to_detailActivity"
+            app:destination="@id/detailActivity" />
     </fragment>
 
     <fragment
@@ -21,8 +21,8 @@
         android:label="@string/title_upcoming"
         tools:layout="@layout/fragment_upcoming" >
         <action
-            android:id="@+id/action_navigation_upcoming_to_detailFragment"
-            app:destination="@id/detailFragment" />
+            android:id="@+id/action_navigation_upcoming_to_detailActivity"
+            app:destination="@id/detailActivity" />
     </fragment>
 
     <fragment
@@ -31,22 +31,12 @@
         android:label="@string/title_finished"
         tools:layout="@layout/fragment_finished" >
         <action
-            android:id="@+id/action_navigation_finished_to_detailFragment"
-            app:destination="@id/detailFragment" />
+            android:id="@+id/action_navigation_finished_to_detailActivity"
+            app:destination="@id/detailActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.example.dicodingevent.ui.detail.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
-        <action
-            android:id="@+id/action_detailFragment_to_navigation_finished"
-            app:destination="@id/navigation_finished" />
-        <action
-            android:id="@+id/action_detailFragment_to_navigation_home"
-            app:destination="@id/navigation_home" />
-        <action
-            android:id="@+id/action_detailFragment_to_navigation_upcoming"
-            app:destination="@id/navigation_upcoming" />
-    </fragment>
+    <activity
+        android:id="@+id/detailActivity"
+        android:name="com.example.dicodingevent.ui.detail.DetailActivity"
+        android:label="activity_detail"
+        tools:layout="@layout/activity_detail" />
 </navigation>
