@@ -1,3 +1,5 @@
+package com.example.dicodingevent.utils
+
 open class EventVar<out T>(private val content: T) {
 
     @Suppress("MemberVisibilityCanBePrivate")

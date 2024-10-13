@@ -10,6 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.example.dicodingevent"
         minSdk = 24
+        //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -55,5 +56,4 @@ dependencies {
     implementation(libs.retrofit2.retrofit)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.logging.interceptor)
-
 }

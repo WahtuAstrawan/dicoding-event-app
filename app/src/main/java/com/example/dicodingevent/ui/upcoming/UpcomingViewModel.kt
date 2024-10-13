@@ -1,6 +1,6 @@
 package com.example.dicodingevent.ui.upcoming
 
-import EventVar
+import com.example.dicodingevent.utils.EventVar
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -81,7 +81,7 @@ class UpcomingViewModel : ViewModel() {
             override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
-                _errorMsg.value = EventVar("Terjadi kesalahan memuat data, coba lagi")
+                _errorMsg.value = EventVar("Terjadi kesalahan mencari data, coba lagi")
             }
 
         })

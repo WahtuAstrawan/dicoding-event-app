@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -39,8 +38,6 @@ class UpcomingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
-
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvUpcoming.layoutManager = layoutManager
 
@@ -62,7 +59,7 @@ class UpcomingFragment : Fragment() {
             val adapter = EventAdapter()
             adapter.submitList(listEvent)
             binding.rvUpcoming.adapter = adapter
-            if(listEvent.isEmpty()) {
+            if (listEvent.isEmpty()) {
                 binding.tvEmpty.visibility = View.VISIBLE
             } else {
                 binding.tvEmpty.visibility = View.GONE
@@ -74,12 +71,13 @@ class UpcomingFragment : Fragment() {
         }
 
         with(binding) {
-            searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     upcomingViewModel.setSearchText(query.toString())
                     upcomingViewModel.searchEvents()
 
-                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
                     return true
                 }

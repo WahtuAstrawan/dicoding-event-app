@@ -4,17 +4,21 @@
     <string name="title_upcoming">Upcoming Events</string>
     <string name="title_finished">Finished Events</string>
     <string name="search_hint">Search</string>
-    <string name="send">Search</string>
     <string name="cover_image">cover_image</string>
-    <string name="cover_text">Dicoding Events</string>
     <string name="tv_title_1">Upcoming Events</string>
     <string name="tv_title_2">Finished Events</string>
     <string name="list_photo">list_photo</string>
     <string name="event_name">Belajar Kotlin</string>
-    <string name="event_time">2024-05-17 16:00:00</string>
-    <string name="summary">Acara ini sepenuhnya GRATIS dan akan diselenggarakan hari Jum\'at, 17 Mei 2024 pukul 16.00 - 17.00 WIB Live di YouTube</string>
+    <string name="event_time">2024–05–17 16:00:00</string>
+    <string name="summary">Acara ini sepenuhnya GRATIS dan akan diselenggarakan hari Jum\'at, 17 Mei 2024 pukul 16.00 – 17.00 WIB Live di YouTube</string>
     <string name="emptyStatus">Tidak Ada Data Event</string>
     <string name="finished">Finished</string>
     <string name="upcoming">Upcoming</string>
     <string name="home">Home</string>
+    <string name="dummyText"> </string>
+    <string name="btnRegis">Daftar Sekarang</string>
+    <string name="penyelenggaraDet">Penyelenggara: \n%1$s</string>
+    <string name="tempatDet">Tempat: \n%1$s</string>
+    <string name="waktuDet">Waktu: \n%1$s\nSampai\n%2$s</string>
+    <string name="sisa_kuotaDet">Sisa Kuota: %1$s</string>
 </resources>

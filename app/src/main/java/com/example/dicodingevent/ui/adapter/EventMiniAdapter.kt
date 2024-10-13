@@ -1,5 +1,6 @@
 package com.example.dicodingevent.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.ItemEventMiniBinding
+import com.example.dicodingevent.ui.detail.DetailActivity
 
 class EventMiniAdapter: ListAdapter<ListEventsItem, EventMiniAdapter.EventMiniViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
@@ -21,6 +23,11 @@ class EventMiniAdapter: ListAdapter<ListEventsItem, EventMiniAdapter.EventMiniVi
     override fun onBindViewHolder(holder: EventMiniViewHolder, position: Int) {
         val event = getItem(position)
         holder.bind(event)
+        holder.itemView.setOnClickListener {
+            val intentDetail = Intent(holder.itemView.context, DetailActivity::class.java)
+            intentDetail.putExtra(DT_ID, event.id.toString())
+            holder.itemView.context.startActivity(intentDetail)
+        }
     }
 
     class EventMiniViewHolder(private val binding: ItemEventMiniBinding): RecyclerView.ViewHolder(binding.root) {
@@ -48,5 +55,7 @@ class EventMiniAdapter: ListAdapter<ListEventsItem, EventMiniAdapter.EventMiniVi
                 return oldItem == newItem
             }
         }
+
+        const val DT_ID = "dt_id"
     }
 }

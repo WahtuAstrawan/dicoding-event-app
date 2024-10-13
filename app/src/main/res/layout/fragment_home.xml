@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:fillViewport="true"
     tools:context=".ui.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +13,7 @@
         <ImageView
             android:id="@+id/ivCover"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="250dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/cover_image"
             android:scaleType="centerCrop"
@@ -34,7 +33,6 @@
             android:text="@string/tv_title_1"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/rvUpcomingHome"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -44,7 +42,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvUpcomingHome"
             android:layout_width="match_parent"
-            android:layout_height="125dp"
+            android:layout_height="120dp"
             android:layout_margin="1dp"
             android:overScrollMode="never"
             android:scrollbarSize="0dp"
@@ -64,7 +62,6 @@
             android:text="@string/tv_title_2"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/rvFinishedHome"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +70,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFinishedHome"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="275dp"
             android:layout_margin="1dp"
             android:paddingBottom="56dp"
             android:clipToPadding="false"

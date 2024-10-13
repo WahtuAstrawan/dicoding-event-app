@@ -1,6 +1,6 @@
 package com.example.dicodingevent.ui.finished
 
-import EventVar
+import com.example.dicodingevent.utils.EventVar
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,7 +26,7 @@ class FinishedViewModel : ViewModel() {
     private val _errorMsg = MutableLiveData<EventVar<String>>()
     val errorMsg: LiveData<EventVar<String>> = _errorMsg
 
-    companion object{
+    companion object {
         private const val TAG = "FinishedViewModel"
         private const val STATUS = "0"
     }
@@ -38,13 +38,13 @@ class FinishedViewModel : ViewModel() {
     private fun getEvents() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getEvents(STATUS)
-        client.enqueue(object: Callback<EventsResponse> {
+        client.enqueue(object : Callback<EventsResponse> {
             override fun onResponse(
                 call: Call<EventsResponse>,
                 response: Response<EventsResponse>
             ) {
                 _isLoading.value = false
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     _listEvent.value = response.body()?.listEvents
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -64,13 +64,13 @@ class FinishedViewModel : ViewModel() {
     fun searchEvents() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().searchEvents(STATUS, searchText.value.toString())
-        client.enqueue(object: Callback<EventsResponse> {
+        client.enqueue(object : Callback<EventsResponse> {
             override fun onResponse(
                 call: Call<EventsResponse>,
                 response: Response<EventsResponse>
             ) {
                 _isLoading.value = false
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     _listEvent.value = response.body()?.listEvents
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -81,7 +81,7 @@ class FinishedViewModel : ViewModel() {
             override fun onFailure(call: Call<EventsResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
-                _errorMsg.value = EventVar("Terjadi kesalahan memuat data, coba lagi")
+                _errorMsg.value = EventVar("Terjadi kesalahan mencari data, coba lagi")
             }
 
         })

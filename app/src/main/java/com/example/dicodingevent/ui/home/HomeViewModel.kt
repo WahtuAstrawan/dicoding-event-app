@@ -1,6 +1,6 @@
 package com.example.dicodingevent.ui.home
 
-import EventVar
+import com.example.dicodingevent.utils.EventVar
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

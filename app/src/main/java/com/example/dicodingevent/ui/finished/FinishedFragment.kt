@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -39,8 +38,6 @@ class FinishedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
-
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvFinished.layoutManager = layoutManager
 
@@ -52,7 +49,7 @@ class FinishedFragment : Fragment() {
             val adapter = EventMiniAdapter()
             adapter.submitList(listEvent)
             binding.rvFinished.adapter = adapter
-            if(listEvent.isEmpty()) {
+            if (listEvent.isEmpty()) {
                 binding.tvEmpty.visibility = View.VISIBLE
             } else {
                 binding.tvEmpty.visibility = View.GONE
@@ -74,12 +71,13 @@ class FinishedFragment : Fragment() {
         }
 
         with(binding) {
-            searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     finishedViewModel.setSearchText(query.toString())
                     finishedViewModel.searchEvents()
 
-                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
                     return true
                 }
@@ -88,7 +86,6 @@ class FinishedFragment : Fragment() {
                     finishedViewModel.setSearchText(newText.toString())
                     return false
                 }
-
             })
         }
     }

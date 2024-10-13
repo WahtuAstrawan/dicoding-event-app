@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <!-- Warna Utama (orange) -->
     <color name="orange_primary">#FF9800</color>
     <color name="orange_dark">#F57C00</color>
     <color name="orange_secondary">#FFCC80</color>
-    <color name="grey">#e6e4e0</color>
 
     <!-- Warna latar belakang -->
     <color name="background_light">#FFFFFF</color>
@@ -22,7 +16,6 @@
     <color name="black">#000000</color>
 
     <!-- Warna Utama (orange) untuk dark mode -->
-    <color name="orange_primary_dark">#FFB74D</color>
     <color name="orange_secondary_dark">#FF8A65</color>
     <color name="icon_tint">#000000</color>
     <color name="icon_tint_dark">#ffffff</color>
@@ -33,5 +26,4 @@
     <!-- Warna teks untuk dark mode -->
     <color name="text_primary_dark">#E0E0E0</color>
     <color name="text_secondary_dark">#B0BEC5</color>
-    <color name="text_subtitle">#757575</color>
 </resources>
