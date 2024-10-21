@@ -7,28 +7,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.databinding.FragmentUpcomingBinding
+import com.example.dicodingevent.ui.ViewModelFactory
 import com.example.dicodingevent.ui.adapter.EventAdapter
+import com.example.dicodingevent.data.Result
+import com.example.dicodingevent.data.remote.response.ListEventsItem
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class UpcomingFragment : Fragment() {
 
     private var _binding: FragmentUpcomingBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var upcomingViewModel: UpcomingViewModel
+    private val adapter = EventAdapter()
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        upcomingViewModel =
-            ViewModelProvider(this)[UpcomingViewModel::class.java]
-
         _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -40,42 +46,43 @@ class UpcomingFragment : Fragment() {
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvUpcoming.layoutManager = layoutManager
+        binding.rvUpcoming.adapter = adapter
+
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val upcomingViewModel: UpcomingViewModel by viewModels {
+            factory
+        }
 
         upcomingViewModel.searchText.observe(viewLifecycleOwner) { searchQuery ->
             binding.searchBar.setQuery(searchQuery, false)
         }
 
-        upcomingViewModel.errorMsg.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { errorMsg ->
-                Snackbar.make(
-                    requireActivity().window.decorView.rootView,
-                    errorMsg,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+        if (upcomingViewModel.searchText.value.isNullOrEmpty()) {
+            upcomingViewModel.getEvents().observe(viewLifecycleOwner) { result ->
+                handleResult(result)
             }
-        }
-
-        upcomingViewModel.listEvent.observe(viewLifecycleOwner) { listEvent ->
-            val adapter = EventAdapter()
-            adapter.submitList(listEvent)
-            binding.rvUpcoming.adapter = adapter
-            if (listEvent.isEmpty()) {
-                binding.tvEmpty.visibility = View.VISIBLE
-            } else {
-                binding.tvEmpty.visibility = View.GONE
+        } else {
+            upcomingViewModel.searchEvents(
+                UpcomingViewModel.STATUS,
+                upcomingViewModel.searchText.value.toString()
+            ).observe(viewLifecycleOwner) { result ->
+                handleResult(result)
             }
-        }
-
-        upcomingViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         with(binding) {
             searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let {
+                        upcomingViewModel.searchEvents(
+                            UpcomingViewModel.STATUS,
+                            it,
+                            isSubmit = true
+                        ).observe(viewLifecycleOwner) { result ->
+                            handleResult(result)
+                        }
+                    }
                     upcomingViewModel.setSearchText(query.toString())
-                    upcomingViewModel.searchEvents()
-
                     val imm =
                         requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
@@ -83,10 +90,36 @@ class UpcomingFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    upcomingViewModel.setSearchText(newText.toString())
+                    searchJob?.cancel()
+                    searchJob = lifecycleScope.launch {
+                        delay(300)
+                        upcomingViewModel.setSearchText(newText ?: "")
+                    }
                     return false
                 }
             })
+        }
+    }
+
+    private fun handleResult(result: Result<List<ListEventsItem>>) {
+        when (result) {
+            is Result.Loading -> binding.progressBar.isVisible = true
+            is Result.Success -> {
+                binding.progressBar.isVisible = false
+                adapter.submitList(result.data)
+                binding.tvEmpty.isVisible = result.data.isEmpty()
+            }
+
+            is Result.Error -> {
+                binding.progressBar.isVisible = false
+                result.message.getContentIfNotHandled()?.let { errorMessage ->
+                    Snackbar.make(
+                        requireActivity().window.decorView.rootView,
+                        errorMessage,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 

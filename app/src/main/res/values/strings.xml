@@ -19,6 +19,12 @@
     <string name="btnRegis">Daftar Sekarang</string>
     <string name="penyelenggaraDet">Penyelenggara: \n%1$s</string>
     <string name="tempatDet">Tempat: \n%1$s</string>
-    <string name="waktuDet">Waktu: \n%1$s\nSampai\n%2$s</string>
+    <string name="waktuDet">Waktu: \n%1$s\n---Sampai---\n%2$s</string>
     <string name="sisa_kuotaDet">Sisa Kuota: %1$s</string>
+    <string name="detail_title">Event Details</string>
+    <string name="favorite">Favorite</string>
+    <string name="setting">Setting</string>
+    <string name="title_setting">Settings</string>
+    <string name="title_favorite">Favorite Events</string>
+    <string name="favorite_icon">Favorite Icon</string>
 </resources>

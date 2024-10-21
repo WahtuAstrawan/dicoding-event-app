@@ -1,4 +1,4 @@
-package com.example.dicodingevent.data.api
+package com.example.dicodingevent.data.remote.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

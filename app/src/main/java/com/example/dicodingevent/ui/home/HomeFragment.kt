@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dicodingevent.data.Result
 import com.example.dicodingevent.databinding.FragmentHomeBinding
+import com.example.dicodingevent.ui.ViewModelFactory
 import com.example.dicodingevent.ui.adapter.EventMiniAdapter
 import com.google.android.material.snackbar.Snackbar
 
@@ -16,16 +19,14 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+    private val adapterUp = EventMiniAdapter()
+    private val adapterFin = EventMiniAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel =
-            ViewModelProvider(this)[HomeViewModel::class.java]
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -35,36 +36,64 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val layoutManagerUp = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val homeViewModel: HomeViewModel by viewModels {
+            factory
+        }
+
+        val layoutManagerUp =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvUpcomingHome.layoutManager = layoutManagerUp
+        binding.rvUpcomingHome.adapter = adapterUp
 
         val layoutManagerFin = LinearLayoutManager(requireContext())
         binding.rvFinishedHome.layoutManager = layoutManagerFin
+        binding.rvFinishedHome.adapter = adapterFin
 
-        homeViewModel.listEventUp.observe(viewLifecycleOwner) { listEventUp ->
-            val adapterUp = EventMiniAdapter()
-            adapterUp.submitList(listEventUp)
-            binding.rvUpcomingHome.adapter = adapterUp
-        }
+        homeViewModel.getEventsUpcoming().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    binding.progressBar.isVisible = true
+                }
 
-        homeViewModel.listEventFin.observe(viewLifecycleOwner) { listEventFin ->
-            val adapterFin = EventMiniAdapter()
-            adapterFin.submitList(listEventFin)
-            binding.rvFinishedHome.adapter = adapterFin
-        }
+                is Result.Success -> {
+                    binding.progressBar.isVisible = false
+                    adapterUp.submitList(result.data)
+                }
 
-        homeViewModel.errorMsg.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { errorMsg ->
-                Snackbar.make(
-                    requireActivity().window.decorView.rootView,
-                    errorMsg,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                is Result.Error -> {
+                    result.message.getContentIfNotHandled()?.let { errorMessage ->
+                        Snackbar.make(
+                            requireActivity().window.decorView.rootView,
+                            errorMessage,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
         }
 
-        homeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        homeViewModel.getEventsFinished().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    binding.progressBar.isVisible = true
+                }
+
+                is Result.Success -> {
+                    binding.progressBar.isVisible = false
+                    adapterFin.submitList(result.data)
+                }
+
+                is Result.Error -> {
+                    result.message.getContentIfNotHandled()?.let { errorMessage ->
+                        Snackbar.make(
+                            requireActivity().window.decorView.rootView,
+                            errorMessage,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
     }
 

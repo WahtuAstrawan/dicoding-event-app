@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.dicodingevent.data.response.ListEventsItem
+import com.example.dicodingevent.data.remote.response.ListEventsItem
 import com.example.dicodingevent.databinding.ItemEventBinding
 import com.example.dicodingevent.ui.detail.DetailActivity
 
@@ -35,9 +35,11 @@ class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.EventViewHolder>(D
         RecyclerView.ViewHolder(binding.root) {
         fun bind(event: ListEventsItem) {
             Glide.with(binding.root.context).load(event.mediaCover).into(binding.ivItemPhoto)
-            binding.tvItemName.text = event.name
-            binding.tvItemTime.text = event.beginTime
-            binding.tvItemSummary.text = event.summary
+            binding.apply {
+                tvItemName.text = event.name
+                tvItemTime.text = event.beginTime
+                tvItemSummary.text = event.summary
+            }
         }
     }
 
@@ -47,7 +49,7 @@ class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.EventViewHolder>(D
                 oldItem: ListEventsItem,
                 newItem: ListEventsItem
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(

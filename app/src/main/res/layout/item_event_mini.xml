@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/img_item_photo_mini"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:contentDescription="@string/list_photo"
             android:scaleType="centerCrop"
             card_view:layout_constraintBottom_toBottomOf="parent"
@@ -73,7 +73,7 @@
             android:layout_marginBottom="4dp"
             android:textSize="12sp"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="4"
             card_view:layout_constraintBottom_toBottomOf="@+id/img_item_photo_mini"
             card_view:layout_constraintEnd_toEndOf="@+id/tv_item_time_mini"
             card_view:layout_constraintStart_toStartOf="@+id/tv_item_time_mini"

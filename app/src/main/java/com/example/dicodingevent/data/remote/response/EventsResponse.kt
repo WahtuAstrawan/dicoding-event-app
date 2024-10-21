@@ -1,16 +1,16 @@
-package com.example.dicodingevent.data.response
+package com.example.dicodingevent.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
 data class EventsResponse(
 
-	@field:SerializedName("listEvents")
+    @field:SerializedName("listEvents")
 	val listEvents: List<ListEventsItem>,
 
-	@field:SerializedName("error")
+    @field:SerializedName("error")
 	val error: Boolean,
 
-	@field:SerializedName("message")
+    @field:SerializedName("message")
 	val message: String
 )
 

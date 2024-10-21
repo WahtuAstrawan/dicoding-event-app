@@ -42,7 +42,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvUpcomingHome"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="145dp"
             android:layout_margin="1dp"
             android:overScrollMode="never"
             android:scrollbarSize="0dp"
