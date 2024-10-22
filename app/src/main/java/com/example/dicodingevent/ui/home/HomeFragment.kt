@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.data.Result
+import com.example.dicodingevent.data.remote.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentHomeBinding
 import com.example.dicodingevent.ui.ViewModelFactory
 import com.example.dicodingevent.ui.adapter.EventMiniAdapter
@@ -51,47 +52,29 @@ class HomeFragment : Fragment() {
         binding.rvFinishedHome.adapter = adapterFin
 
         homeViewModel.getEventsUpcoming().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    binding.progressBar.isVisible = true
-                }
-
-                is Result.Success -> {
-                    binding.progressBar.isVisible = false
-                    adapterUp.submitList(result.data)
-                }
-
-                is Result.Error -> {
-                    result.message.getContentIfNotHandled()?.let { errorMessage ->
-                        Snackbar.make(
-                            requireActivity().window.decorView.rootView,
-                            errorMessage,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
+            handleResult(result, adapterUp)
         }
 
         homeViewModel.getEventsFinished().observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    binding.progressBar.isVisible = true
-                }
+            handleResult(result, adapterFin)
+        }
+    }
 
-                is Result.Success -> {
-                    binding.progressBar.isVisible = false
-                    adapterFin.submitList(result.data)
-                }
-
-                is Result.Error -> {
-                    result.message.getContentIfNotHandled()?.let { errorMessage ->
-                        Snackbar.make(
-                            requireActivity().window.decorView.rootView,
-                            errorMessage,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
+    private fun handleResult(result: Result<List<ListEventsItem>>, adapter: EventMiniAdapter) {
+        when (result) {
+            is Result.Loading -> binding.progressBar.isVisible = true
+            is Result.Success -> {
+                binding.progressBar.isVisible = false
+                adapter.submitList(result.data)
+            }
+            is Result.Error -> {
+                binding.progressBar.isVisible = false
+                result.message.getContentIfNotHandled()?.let { errorMessage ->
+                    Snackbar.make(
+                        requireActivity().window.decorView.rootView,
+                        errorMessage,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

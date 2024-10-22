@@ -7,12 +7,12 @@ import com.example.dicodingevent.data.Result
 import com.example.dicodingevent.data.remote.response.Event
 
 class DetailViewModel(private val eventRepository: EventRepository) : ViewModel() {
-    private var cachedEventDetail: LiveData<Result<Event>>? = null
+    private var _cachedEventDetail: LiveData<Result<Event>>? = null
 
     fun getDetailEvent(id: String?): LiveData<Result<Event>> {
-        if (cachedEventDetail == null) {
-            cachedEventDetail = eventRepository.getDetailEvent(id)
+        if (_cachedEventDetail == null) {
+            _cachedEventDetail = eventRepository.getDetailEvent(id)
         }
-        return cachedEventDetail as LiveData<Result<Event>>
+        return _cachedEventDetail as LiveData<Result<Event>>
     }
 }

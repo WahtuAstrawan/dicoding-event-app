@@ -8,8 +8,8 @@ import com.example.dicodingevent.data.Result
 import com.example.dicodingevent.data.remote.response.ListEventsItem
 
 class FinishedViewModel(private val eventRepository: EventRepository) : ViewModel() {
-    private var cachedEvents: LiveData<Result<List<ListEventsItem>>>? = null
-    private var cachedSearchEvents: LiveData<Result<List<ListEventsItem>>>? = null
+    private var _cachedEvents: LiveData<Result<List<ListEventsItem>>>? = null
+    private var _cachedSearchEvents: LiveData<Result<List<ListEventsItem>>>? = null
 
     private val _searchText = MutableLiveData<String>()
     val searchText: LiveData<String> = _searchText
@@ -17,10 +17,10 @@ class FinishedViewModel(private val eventRepository: EventRepository) : ViewMode
     private var lastSearch: String? = null
 
     fun getEvents(): LiveData<Result<List<ListEventsItem>>> {
-        if (cachedEvents == null) {
-            cachedEvents = eventRepository.getEvents(STATUS)
+        if (_cachedEvents == null) {
+            _cachedEvents = eventRepository.getEvents(STATUS)
         }
-        return cachedEvents as LiveData<Result<List<ListEventsItem>>>
+        return _cachedEvents as LiveData<Result<List<ListEventsItem>>>
     }
 
     fun searchEvents(
@@ -28,11 +28,11 @@ class FinishedViewModel(private val eventRepository: EventRepository) : ViewMode
         keyword: String,
         isSubmit: Boolean = false
     ): LiveData<Result<List<ListEventsItem>>> {
-        if (cachedSearchEvents == null || lastSearch != keyword || isSubmit) {
-            cachedSearchEvents = eventRepository.searchEvents(status, keyword)
+        if (_cachedSearchEvents == null || lastSearch != keyword || isSubmit) {
+            _cachedSearchEvents = eventRepository.searchEvents(status, keyword)
             lastSearch = keyword
         }
-        return cachedSearchEvents as LiveData<Result<List<ListEventsItem>>>
+        return _cachedSearchEvents as LiveData<Result<List<ListEventsItem>>>
     }
 
     fun setSearchText(query: String) {
@@ -43,13 +43,5 @@ class FinishedViewModel(private val eventRepository: EventRepository) : ViewMode
 
     companion object {
         const val STATUS = "0"
-    }
-
-    init {
-        if (searchText.value.isNullOrEmpty()) {
-            getEvents()
-        } else {
-            searchEvents(STATUS, searchText.value.toString())
-        }
     }
 }
