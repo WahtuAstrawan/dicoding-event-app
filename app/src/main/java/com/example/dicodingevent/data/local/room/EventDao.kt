@@ -17,4 +17,7 @@ interface EventDao {
 
     @Query("DELETE FROM favoriteEvent WHERE id = :id")
     suspend fun deleteFavoriteEvent(id: String)
+
+    @Query("SELECT EXISTS(SELECT * FROM favoriteEvent WHERE id = :id)")
+    suspend fun isFavoriteEvent(id: String): Boolean
 }

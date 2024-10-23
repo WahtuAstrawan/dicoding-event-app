@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.dicodingevent.data.remote.response.ListEventsItem
 import com.example.dicodingevent.databinding.ItemEventBinding
 import com.example.dicodingevent.ui.detail.DetailActivity
 
-class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.EventViewHolder>(DIFF_CALLBACK) {
+class EventAdapter : ListAdapter<EventItem, EventAdapter.EventViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -33,7 +32,7 @@ class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.EventViewHolder>(D
 
     class EventViewHolder(private val binding: ItemEventBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(event: ListEventsItem) {
+        fun bind(event: EventItem) {
             Glide.with(binding.root.context).load(event.mediaCover).into(binding.ivItemPhoto)
             binding.apply {
                 tvItemName.text = event.name
@@ -44,19 +43,23 @@ class EventAdapter : ListAdapter<ListEventsItem, EventAdapter.EventViewHolder>(D
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListEventsItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<EventItem>() {
             override fun areItemsTheSame(
-                oldItem: ListEventsItem,
-                newItem: ListEventsItem
+                oldItem: EventItem,
+                newItem: EventItem
             ): Boolean {
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(
-                oldItem: ListEventsItem,
-                newItem: ListEventsItem
+                oldItem: EventItem,
+                newItem: EventItem
             ): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id &&
+                        oldItem.mediaCover == newItem.mediaCover &&
+                        oldItem.name == newItem.name &&
+                        oldItem.beginTime == newItem.beginTime &&
+                        oldItem.summary == newItem.summary
             }
         }
 

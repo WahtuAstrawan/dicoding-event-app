@@ -3,22 +3,23 @@ package com.example.dicodingevent.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.dicodingevent.ui.adapter.EventItem
 
 @Entity(tableName = "favoriteEvent")
-class FavoriteEventEntity(
+data class FavoriteEventEntity(
     @field:ColumnInfo(name = "id")
-    @field:PrimaryKey
-    val id: String,
+    @field:PrimaryKey(autoGenerate = false)
+    override val id: Int,
 
-    @field:ColumnInfo(name = "imageLogo")
-    val imageLogo: String,
+    @field:ColumnInfo(name = "mediaCover")
+    override val mediaCover: String,
 
     @field:ColumnInfo(name = "name")
-    val name: String,
+    override val name: String,
 
     @field:ColumnInfo(name = "beginTime")
-    val beginTime: String,
+    override val beginTime: String,
 
     @field:ColumnInfo(name = "summary")
-    val summary: String,
-)
+    override val summary: String,
+): EventItem

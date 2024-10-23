@@ -1,5 +1,6 @@
 package com.example.dicodingevent.data.remote.response
 
+import com.example.dicodingevent.ui.adapter.EventItem
 import com.google.gson.annotations.SerializedName
 
 data class EventsResponse(
@@ -17,10 +18,10 @@ data class EventsResponse(
 data class ListEventsItem(
 
 	@field:SerializedName("summary")
-	val summary: String,
+	override val summary: String,
 
 	@field:SerializedName("mediaCover")
-	val mediaCover: String,
+	override val mediaCover: String,
 
 	@field:SerializedName("registrants")
 	val registrants: Int,
@@ -44,17 +45,17 @@ data class ListEventsItem(
 	val quota: Int,
 
 	@field:SerializedName("name")
-	val name: String,
+	override val name: String,
 
 	@field:SerializedName("id")
-	val id: Int,
+	override val id: Int,
 
 	@field:SerializedName("beginTime")
-	val beginTime: String,
+	override val beginTime: String,
 
 	@field:SerializedName("endTime")
 	val endTime: String,
 
 	@field:SerializedName("category")
 	val category: String
-)
+): EventItem

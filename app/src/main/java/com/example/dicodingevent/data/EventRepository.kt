@@ -2,6 +2,7 @@ package com.example.dicodingevent.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import com.example.dicodingevent.data.local.entity.FavoriteEventEntity
 import com.example.dicodingevent.data.local.room.EventDao
 import com.example.dicodingevent.data.remote.api.ApiService
 import com.example.dicodingevent.data.remote.response.Event
@@ -59,6 +60,22 @@ class EventRepository private constructor(
         } catch (e: Exception) {
             emit(Result.Error(EventVar("Terjadi kesalahan mencari data, coba lagi")))
         }
+    }
+
+    fun getAllFavoriteEvent(): LiveData<List<FavoriteEventEntity>> {
+        return eventDao.getAllFavoriteEvent()
+    }
+
+    suspend fun insertFavoriteEvent(event: List<FavoriteEventEntity>) {
+        eventDao.insertFavoriteEvent(event)
+    }
+
+    suspend fun deleteFavoriteEvent(id: String) {
+        eventDao.deleteFavoriteEvent(id)
+    }
+
+    suspend fun isFavoriteEvent(id: String): Boolean {
+        return eventDao.isFavoriteEvent(id)
     }
 
     companion object {

@@ -14,11 +14,13 @@ import com.example.dicodingevent.databinding.ActivityDetailBinding
 import com.example.dicodingevent.ui.ViewModelFactory
 import com.example.dicodingevent.ui.adapter.EventAdapter
 import com.example.dicodingevent.data.Result
+import com.example.dicodingevent.data.local.entity.FavoriteEventEntity
 import com.google.android.material.snackbar.Snackbar
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private lateinit var eventLink: String
+    private lateinit var eventEntity: FavoriteEventEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,14 @@ class DetailActivity : AppCompatActivity() {
 
                 is Result.Success -> {
                     binding.progressBar.isVisible = false
+                    eventEntity = FavoriteEventEntity(
+                        id = result.data.id,
+                        mediaCover = result.data.mediaCover,
+                        name = result.data.name,
+                        beginTime = result.data.beginTime,
+                        summary = result.data.summary
+                    )
+
                     Glide.with(this).load(result.data.mediaCover).into(binding.ivCover)
                     binding.apply {
                         tvTitle.text = result.data.name
@@ -63,6 +73,7 @@ class DetailActivity : AppCompatActivity() {
                         )
                     }
                     eventLink = result.data.link
+                    detailViewModel.isFavoriteEvent(result.data.id.toString())
                 }
 
                 is Result.Error -> {
@@ -74,6 +85,36 @@ class DetailActivity : AppCompatActivity() {
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
+                }
+            }
+        }
+
+        detailViewModel.isFavorite.observe(this) { isFavorite ->
+            if (isFavorite){
+                binding.actionFavorite.setImageResource(R.drawable.ic_favorited)
+            } else {
+                binding.actionFavorite.setImageResource(R.drawable.ic_favorite)
+            }
+        }
+
+        binding.actionFavorite.setOnClickListener {
+            detailViewModel.isFavorite.value?.let { isFavorite ->
+                if (isFavorite) {
+                    detailViewModel.deleteFavoriteEvent(eventId.toString())
+                    Snackbar.make(
+                        window.decorView.rootView,
+                        getString(R.string.remove_favorite),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                    detailViewModel.isFavoriteEvent(eventId.toString())
+                } else {
+                    detailViewModel.insertFavoriteEvent(listOf(eventEntity))
+                    Snackbar.make(
+                        window.decorView.rootView,
+                        getString(R.string.added_favorite),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                    detailViewModel.isFavoriteEvent(eventId.toString())
                 }
             }
         }
