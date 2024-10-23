@@ -7,13 +7,12 @@ import com.example.dicodingevent.data.local.room.EventDao
 import com.example.dicodingevent.data.remote.api.ApiService
 import com.example.dicodingevent.data.remote.response.Event
 import com.example.dicodingevent.data.remote.response.ListEventsItem
-import com.example.dicodingevent.utils.AppExecutors
 import com.example.dicodingevent.utils.EventVar
+import kotlinx.coroutines.flow.Flow
 
 class EventRepository private constructor(
     private val apiService: ApiService,
-    private val eventDao: EventDao,
-    private val appExecutors: AppExecutors
+    private val eventDao: EventDao
 ) {
     fun getDetailEvent(id: String?): LiveData<Result<Event>> = liveData {
         emit(Result.Loading)
@@ -62,8 +61,8 @@ class EventRepository private constructor(
         }
     }
 
-    fun getAllFavoriteEvent(): LiveData<List<FavoriteEventEntity>> {
-        return eventDao.getAllFavoriteEvent()
+    fun getAllFavoriteEvents(): Flow<List<FavoriteEventEntity>> {
+        return eventDao.getAllFavoriteEvents()
     }
 
     suspend fun insertFavoriteEvent(event: List<FavoriteEventEntity>) {
@@ -84,10 +83,9 @@ class EventRepository private constructor(
         fun getInstance(
             apiService: ApiService,
             eventDao: EventDao,
-            appExecutors: AppExecutors
         ): EventRepository =
             instance ?: synchronized(this) {
-                instance ?: EventRepository(apiService, eventDao, appExecutors)
+                instance ?: EventRepository(apiService, eventDao)
             }.also { instance = it }
     }
 }

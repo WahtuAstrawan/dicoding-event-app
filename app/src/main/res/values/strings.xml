@@ -29,4 +29,8 @@
     <string name="favorite_icon">Favorite Icon</string>
     <string name="remove_favorite">Event dihapus dari favorite</string>
     <string name="added_favorite">Event ditambahkan ke favorite</string>
+    <string name="darkMode">Dark Mode</string>
+    <string name="notification">Daily Remainder</string>
+    <string name="toggle_dark_mode">Toggle Dark Mode</string>
+    <string name="toggle_notification">Toggle Notification</string>
 </resources>

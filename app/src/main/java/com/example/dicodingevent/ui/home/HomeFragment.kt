@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,6 +14,7 @@ import com.example.dicodingevent.data.remote.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentHomeBinding
 import com.example.dicodingevent.ui.ViewModelFactory
 import com.example.dicodingevent.ui.adapter.EventMiniAdapter
+import com.example.dicodingevent.ui.setting.SettingViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class HomeFragment : Fragment() {
@@ -40,6 +42,17 @@ class HomeFragment : Fragment() {
         val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
         val homeViewModel: HomeViewModel by viewModels {
             factory
+        }
+        val settingViewModel: SettingViewModel by viewModels {
+            factory
+        }
+
+        settingViewModel.getThemeSetting().observe(viewLifecycleOwner) { isDarkMode ->
+            if (isDarkMode) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
         }
 
         val layoutManagerUp =

@@ -9,9 +9,13 @@ import com.example.dicodingevent.ui.detail.DetailViewModel
 import com.example.dicodingevent.ui.favorite.FavoriteViewModel
 import com.example.dicodingevent.ui.finished.FinishedViewModel
 import com.example.dicodingevent.ui.home.HomeViewModel
+import com.example.dicodingevent.ui.setting.SettingViewModel
 import com.example.dicodingevent.ui.upcoming.UpcomingViewModel
 
-class ViewModelFactory private constructor(private val eventRepository: EventRepository) :
+class ViewModelFactory private constructor(
+    private val eventRepository: EventRepository,
+    private val pref: SettingPreferences
+) :
     ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
@@ -26,6 +30,8 @@ class ViewModelFactory private constructor(private val eventRepository: EventRep
             return UpcomingViewModel(eventRepository) as T
         } else if (modelClass.isAssignableFrom(FavoriteViewModel::class.java)) {
             return FavoriteViewModel(eventRepository) as T
+        } else if (modelClass.isAssignableFrom(SettingViewModel::class.java)) {
+            return SettingViewModel(pref) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
@@ -35,7 +41,10 @@ class ViewModelFactory private constructor(private val eventRepository: EventRep
         private var instance: ViewModelFactory? = null
         fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(Injection.provideRepository(context))
+                instance ?: ViewModelFactory(
+                    Injection.provideRepository(context),
+                    Injection.providePreferences(context)
+                )
             }.also { instance = it }
     }
 }
