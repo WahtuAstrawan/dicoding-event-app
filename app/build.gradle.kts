@@ -65,5 +65,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.jetbrains.kotlinx.coroutines.android)
+    implementation(libs.androidx.work.runtime)
     ksp(libs.room.compiler)
 }

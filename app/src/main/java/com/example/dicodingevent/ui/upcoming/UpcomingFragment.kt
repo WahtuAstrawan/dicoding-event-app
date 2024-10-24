@@ -53,52 +53,33 @@ class UpcomingFragment : Fragment() {
             factory
         }
 
-        upcomingViewModel.searchText.observe(viewLifecycleOwner) { searchQuery ->
-            binding.searchBar.setQuery(searchQuery, false)
+        upcomingViewModel.searchText.observe(viewLifecycleOwner) { query ->
+            binding.searchBar.setQuery(query, false)
         }
 
-        if (upcomingViewModel.searchText.value.isNullOrEmpty()) {
-            upcomingViewModel.getEvents().observe(viewLifecycleOwner) { result ->
-                handleResult(result)
+        upcomingViewModel.events.observe(viewLifecycleOwner) { result ->
+            handleResult(result)
+        }
+
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                upcomingViewModel.setSearchText(query ?: "")
+                upcomingViewModel.searchEvents()
+                val imm =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.searchBar.windowToken, 0)
+                return true
             }
-        } else {
-            upcomingViewModel.searchEvents(
-                UpcomingViewModel.STATUS,
-                upcomingViewModel.searchText.value.toString()
-            ).observe(viewLifecycleOwner) { result ->
-                handleResult(result)
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchJob?.cancel()
+                searchJob = lifecycleScope.launch {
+                    delay(300)
+                    upcomingViewModel.setSearchText(newText ?: "")
+                }
+                return false
             }
-        }
-
-        with(binding) {
-            searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    query?.let {
-                        upcomingViewModel.searchEvents(
-                            UpcomingViewModel.STATUS,
-                            it,
-                            isSubmit = true
-                        ).observe(viewLifecycleOwner) { result ->
-                            handleResult(result)
-                        }
-                    }
-                    upcomingViewModel.setSearchText(query.toString())
-                    val imm =
-                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    searchJob?.cancel()
-                    searchJob = lifecycleScope.launch {
-                        delay(300)
-                        upcomingViewModel.setSearchText(newText ?: "")
-                    }
-                    return false
-                }
-            })
-        }
+        })
     }
 
     private fun handleResult(result: Result<List<ListEventsItem>>) {

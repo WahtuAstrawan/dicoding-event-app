@@ -40,7 +40,7 @@ class FavoriteFragment : Fragment() {
             factory
         }
 
-        favoriteViewModel.getAllFavoriteEvents().observe(viewLifecycleOwner) { favEvents ->
+        favoriteViewModel.favoriteEvents.observe(viewLifecycleOwner) { favEvents ->
             binding.progressBar.isVisible = false
             adapter.submitList(favEvents)
             binding.tvEmpty.isVisible = favEvents.isEmpty()

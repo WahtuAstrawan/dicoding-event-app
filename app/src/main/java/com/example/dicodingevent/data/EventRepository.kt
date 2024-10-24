@@ -1,7 +1,5 @@
 package com.example.dicodingevent.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.example.dicodingevent.data.local.entity.FavoriteEventEntity
 import com.example.dicodingevent.data.local.room.EventDao
 import com.example.dicodingevent.data.remote.api.ApiService
@@ -9,12 +7,13 @@ import com.example.dicodingevent.data.remote.response.Event
 import com.example.dicodingevent.data.remote.response.ListEventsItem
 import com.example.dicodingevent.utils.EventVar
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class EventRepository private constructor(
     private val apiService: ApiService,
     private val eventDao: EventDao
 ) {
-    fun getDetailEvent(id: String?): LiveData<Result<Event>> = liveData {
+    fun getEventDetail(id: String?): Flow<Result<Event>> = flow {
         emit(Result.Loading)
         try {
             if (id != null) {
@@ -28,7 +27,7 @@ class EventRepository private constructor(
         }
     }
 
-    fun getEvents(status: String): LiveData<Result<List<ListEventsItem>>> = liveData {
+    fun getEvents(status: String): Flow<Result<List<ListEventsItem>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getEvents(status)
@@ -39,7 +38,7 @@ class EventRepository private constructor(
         }
     }
 
-    fun getEventsWithLimit(status: String, limit: String): LiveData<Result<List<ListEventsItem>>> = liveData {
+    fun getEventsWithLimit(status: String, limit: String): Flow<Result<List<ListEventsItem>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getEventsWithLimit(status, limit)
@@ -50,7 +49,7 @@ class EventRepository private constructor(
         }
     }
 
-    fun searchEvents(status: String, keyword: String): LiveData<Result<List<ListEventsItem>>> = liveData {
+    fun searchEvents(status: String, keyword: String): Flow<Result<List<ListEventsItem>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.searchEvents(status, keyword)

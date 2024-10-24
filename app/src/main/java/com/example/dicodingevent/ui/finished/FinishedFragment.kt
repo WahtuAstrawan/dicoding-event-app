@@ -53,53 +53,33 @@ class FinishedFragment : Fragment() {
             factory
         }
 
-        finishedViewModel.searchText.observe(viewLifecycleOwner) { searchQuery ->
-            binding.searchBar.setQuery(searchQuery, false)
+        finishedViewModel.events.observe(viewLifecycleOwner) { result ->
+            handleResult(result)
         }
 
-        if (finishedViewModel.searchText.value.isNullOrEmpty()) {
-            finishedViewModel.getEvents().observe(viewLifecycleOwner) { result ->
-                handleResult(result)
+        finishedViewModel.searchText.observe(viewLifecycleOwner) { query ->
+            binding.searchBar.setQuery(query, false)
+        }
+
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                finishedViewModel.setSearchText(query ?: "")
+                finishedViewModel.searchEvents()
+                val imm =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.searchBar.windowToken, 0)
+                return true
             }
-        } else {
-            finishedViewModel.searchEvents(
-                FinishedViewModel.STATUS,
-                finishedViewModel.searchText.value.toString()
-            ).observe(viewLifecycleOwner) { result ->
-                handleResult(result)
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchJob?.cancel()
+                searchJob = lifecycleScope.launch {
+                    delay(200)
+                    finishedViewModel.setSearchText(newText ?: "")
+                }
+                return false
             }
-        }
-
-
-        with(binding) {
-            searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    query?.let {
-                        finishedViewModel.searchEvents(
-                            FinishedViewModel.STATUS,
-                            it,
-                            isSubmit = true
-                        ).observe(viewLifecycleOwner) { result ->
-                            handleResult(result)
-                        }
-                    }
-                    finishedViewModel.setSearchText(query.toString())
-                    val imm =
-                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(searchBar.windowToken, 0)
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    searchJob?.cancel()
-                    searchJob = lifecycleScope.launch {
-                        delay(300)
-                        finishedViewModel.setSearchText(newText ?: "")
-                    }
-                    return false
-                }
-            })
-        }
+        })
     }
 
     private fun handleResult(result: Result<List<ListEventsItem>>) {

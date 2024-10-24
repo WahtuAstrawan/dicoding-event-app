@@ -37,15 +37,20 @@ class DetailActivity : AppCompatActivity() {
         val detailViewModel: DetailViewModel by viewModels {
             factory
         }
+        if (detailViewModel.eventDetail.value == null) {
+            detailViewModel.getDetailEvent(eventId)
+        }
 
-        detailViewModel.getDetailEvent(eventId).observe(this) { result ->
+        detailViewModel.eventDetail.observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
+                    binding.btnRegis.isVisible = false
                     binding.progressBar.isVisible = true
                 }
 
                 is Result.Success -> {
                     binding.progressBar.isVisible = false
+                    binding.btnRegis.isVisible = true
                     eventEntity = FavoriteEventEntity(
                         id = result.data.id,
                         mediaCover = result.data.mediaCover,
@@ -78,6 +83,7 @@ class DetailActivity : AppCompatActivity() {
 
                 is Result.Error -> {
                     binding.progressBar.isVisible = false
+                    binding.btnRegis.isVisible = false
                     result.message.getContentIfNotHandled()?.let { errorMessage ->
                         Snackbar.make(
                             window.decorView.rootView,
@@ -90,7 +96,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         detailViewModel.isFavorite.observe(this) { isFavorite ->
-            if (isFavorite){
+            if (isFavorite) {
                 binding.actionFavorite.setImageResource(R.drawable.ic_favorited)
             } else {
                 binding.actionFavorite.setImageResource(R.drawable.ic_favorite)

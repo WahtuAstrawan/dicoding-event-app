@@ -8,19 +8,22 @@ import com.example.dicodingevent.data.EventRepository
 import com.example.dicodingevent.data.Result
 import com.example.dicodingevent.data.local.entity.FavoriteEventEntity
 import com.example.dicodingevent.data.remote.response.Event
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val eventRepository: EventRepository) : ViewModel() {
-    private var _cachedEventDetail: LiveData<Result<Event>>? = null
+    private val _eventDetail = MutableLiveData<Result<Event>>()
+    val eventDetail: LiveData<Result<Event>> = _eventDetail
 
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
-    fun getDetailEvent(id: String?): LiveData<Result<Event>> {
-        if (_cachedEventDetail == null) {
-            _cachedEventDetail = eventRepository.getDetailEvent(id)
+    fun getDetailEvent(id: String?) {
+        viewModelScope.launch {
+            eventRepository.getEventDetail(id).collectLatest { result ->
+                _eventDetail.value = result
+            }
         }
-        return _cachedEventDetail as LiveData<Result<Event>>
     }
 
     fun isFavoriteEvent(id: String) {

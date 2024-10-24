@@ -64,24 +64,44 @@ class HomeFragment : Fragment() {
         binding.rvFinishedHome.layoutManager = layoutManagerFin
         binding.rvFinishedHome.adapter = adapterFin
 
-        homeViewModel.getEventsUpcoming().observe(viewLifecycleOwner) { result ->
-            handleResult(result, adapterUp)
+        homeViewModel.eventsUpcoming.observe(viewLifecycleOwner) { result ->
+            handleResult(result, adapterUp, "UP")
         }
 
-        homeViewModel.getEventsFinished().observe(viewLifecycleOwner) { result ->
-            handleResult(result, adapterFin)
+        homeViewModel.eventsFinished.observe(viewLifecycleOwner) { result ->
+            handleResult(result, adapterFin, "FIN")
         }
     }
 
-    private fun handleResult(result: Result<List<ListEventsItem>>, adapter: EventMiniAdapter) {
+    private fun handleResult(
+        result: Result<List<ListEventsItem>>,
+        adapter: EventMiniAdapter,
+        type: String
+    ) {
         when (result) {
-            is Result.Loading -> binding.progressBar.isVisible = true
+            is Result.Loading -> {
+                if(type == "UP"){
+                    binding.progressBarUpcoming.isVisible = true
+                }else{
+                    binding.progressBarFinished.isVisible = true
+                }
+            }
+
             is Result.Success -> {
-                binding.progressBar.isVisible = false
+                if(type == "UP") {
+                    binding.progressBarUpcoming.isVisible = false
+                } else {
+                    binding.progressBarFinished.isVisible = false
+                }
                 adapter.submitList(result.data)
             }
+
             is Result.Error -> {
-                binding.progressBar.isVisible = false
+                if(type == "UP") {
+                    binding.progressBarUpcoming.isVisible = false
+                } else {
+                    binding.progressBarFinished.isVisible = false
+                }
                 result.message.getContentIfNotHandled()?.let { errorMessage ->
                     Snackbar.make(
                         requireActivity().window.decorView.rootView,
